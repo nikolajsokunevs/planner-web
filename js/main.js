@@ -1,6 +1,9 @@
 $(function() {
   // page is now ready, initialize the calendar...
   $('#calendar').fullCalendar({
-    // put your options and callbacks here
+    //dayClick:function (){
+    //  alert('it works works')
+    //}
+    theme: true
   })
 });
