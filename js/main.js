@@ -9,25 +9,40 @@ $(function () {
     eventSources: [
 
       {
-        events: [
-          {
-            title: 'event1',
-            start: '2018-08-01'
-          },
-          {
-            title: 'event2',
-            start: '2018-08-05',
-            end: '2018-08-07'
-          },
-          {
-            title: 'event7',
-            start: '2018-08-09T12:45:00',
-            end: '2018-08-09T12:50:00',
-            allDay: false, // will make the time show
-          }
-        ],
-        collor: 'yellow'
-      }]
+        url: 'http://localhost:8080/myapp/event/all',
+        type: 'GET',
+        error: function() {
+          alert('there was an error while fetching events!');
+        }
+      }
+  
+      // any other sources...
+  
+    ],
+
+      eventClick: function(calEvent, jsEvent, view) {
+
+        alert('Event: ' + calEvent.title);
+        alert('Event: ' + calEvent.start);
+        alert('Event: ' + calEvent.id);
+        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+        alert('View: ' + view.name);
+    
+        // change the border color just for fun
+        $(this).css('border-color', 'red');
+    
+      }
+  })
+
+  $.ajax({
+    url:'http://localhost:8080/myapp/event/all',
+    type:"GET",
+    success: function(result){
+      alert(result)
+    },
+    error: function(result){
+      alert(result)
+    }
   })
 
 
