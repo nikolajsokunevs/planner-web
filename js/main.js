@@ -1,7 +1,7 @@
 $(function () {
   // page is now ready, initialize the calendar...
   $('#calendar').fullCalendar({
-    dayClick: function () {
+    dayClick: function (date, jsEvent, view) {
       $('#dialog').dialog('open')
     },
     theme: true,
@@ -11,40 +11,19 @@ $(function () {
       {
         url: 'http://localhost:8080/myapp/event/all',
         type: 'GET',
-        error: function() {
+        error: function (result) {
           alert('there was an error while fetching events!');
         }
       }
-  
-      // any other sources...
-  
     ],
 
-      eventClick: function(calEvent, jsEvent, view) {
-
-        alert('Event: ' + calEvent.title);
-        alert('Event: ' + calEvent.start);
-        alert('Event: ' + calEvent.id);
-        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-        alert('View: ' + view.name);
-    
-        // change the border color just for fun
-        $(this).css('border-color', 'red');
-    
-      }
-  })
-
-  $.ajax({
-    url:'http://localhost:8080/myapp/event/all',
-    type:"GET",
-    success: function(result){
-      alert(result)
-    },
-    error: function(result){
-      alert(result)
+    eventClick: function (calEvent, jsEvent, view) {
+      $('#dialog').dialog('open')
+      $('#event').val(calEvent.title)
+      $('#name').val(calEvent.clientName)
+      $('#phoneNumber').val(calEvent.cliectPhoneNumber)
     }
   })
-
 
   $('#dialog').dialog({
     autoOpen: false,
@@ -69,11 +48,32 @@ $(function () {
     generateOptions(jQuery("#endTime"), startTime + 0.5, 15);
   });
 
+  $('#submit').click(function () {
+    let jsonObjects = {
+      title: 'test',
+      start: '2018-02-22T12:15:55',
+      end: '2018-02-22T12:35:55'
+    };
+
+    $.ajax({
+      url: 'http://localhost:8080/myapp/event/add',
+      method: 'POST',
+      data: JSON.stringify(jsonObjects),
+      crossDomain: true,
+      contentType: 'application/json',
+      success: function (result) {
+        alert('success');
+      },
+      error: function (result) {
+        alert(JSON.stringify(result));
+      }
+    });
+
+  });
+
 });
 
 function generateOptions(select, from, till) {
-  //let $select = jQuery("#startTime");
-  //for (let hr = from; hr <= till;) {
   select.find('option').remove();
   while (from <= till) {
     let hr = from
