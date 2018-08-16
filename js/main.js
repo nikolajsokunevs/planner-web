@@ -1,14 +1,20 @@
+var selectedDay;
+var selectedEventId;
+
 $(function () {
+
+
   // page is now ready, initialize the calendar...
   $('#calendar').fullCalendar({
     dayClick: function (date, jsEvent, view) {
       $('#dialog').dialog('open')
+      selectedDay=date._d;
     },
     theme: true,
 
     eventSources: [
 
-      {
+    {
         url: 'http://localhost:8080/myapp/event/all',
         type: 'GET',
         error: function (result) {
@@ -22,6 +28,9 @@ $(function () {
       $('#event').val(calEvent.title)
       $('#name').val(calEvent.clientName)
       $('#phoneNumber').val(calEvent.cliectPhoneNumber)
+      $('#delete').prop("disabled", false)
+      $('#delete').removeClass("disabled")
+      selectedEventId=calEvent.id
     }
   })
 
@@ -50,12 +59,16 @@ $(function () {
 
   $('#submit').click(function () {
     let jsonObjects = {
-      title: 'test',
-      start: '2018-02-22T12:15:55',
-      end: '2018-02-22T12:35:55'
+      title: $('#event').val(),
+      clientName: $('#name').val(),
+      cliectPhoneNumber: $('#phoneNumber').val(),
+      start: selectedDay.getFullYear()+'-'+String(selectedDay.getMonth()+1).padStart(2, "0")+'-'+String(selectedDay.getDate()).padStart(2, "0")+'T'+$('#startTime option:selected').text(),
+      end: selectedDay.getFullYear()+'-'+String(selectedDay.getMonth()+1).padStart(2, "0")+'-'+String(selectedDay.getDate()).padStart(2, "0")+'T'+$('#endTime option:selected').text(),
     };
 
+
     $.ajax({
+      async: false,
       url: 'http://localhost:8080/myapp/event/add',
       method: 'POST',
       data: JSON.stringify(jsonObjects),
@@ -68,10 +81,25 @@ $(function () {
         alert(JSON.stringify(result));
       }
     });
-
   });
 
+  $('#delete').click(function () {
+    $.ajax({
+      async: false,
+      url: 'http://localhost:8080/myapp/event/delete/'+selectedEventId,
+      method: 'DELETE',
+      crossDomain: true,
+      //contentType: 'application/json',
+      success: function (result) {
+        alert(JSON.stringify(result));
+      },
+      error: function (result) {
+        alert(JSON.stringify(result));
+      }
+    });
+  });
 });
+
 
 function generateOptions(select, from, till) {
   select.find('option').remove();
