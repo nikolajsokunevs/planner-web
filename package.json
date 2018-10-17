@@ -1,0 +1,20 @@
+{
+  "name": "planner-web",
+  "version": "0.0.1",
+  "main": "index.html",
+  "scripts": {
+    "start": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nokunev/planner-web.git"
+  },
+  "author": "nikolajs.okunevs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nokunev/planner-web/issues"
+  },
+  "dependencies": {
+    "fullcalendar": "3.9.0"
+  }
+}
